@@ -1,5 +1,6 @@
 import React from "react";
-import {Link, useNavigate} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Header = () => {
     const [keyWord , setKeyWord] = React.useState("");
@@ -13,6 +14,11 @@ const Header = () => {
         navigate(`/Search?keyword=${keyWord}`);
         setKeyWord("");
     }
+
+    const totalCart = useSelector(({Cart})=>{
+        return Cart.items.reduce((total, item)=>total + item.qty, 0);
+    });
+    
  
     return (
         <>
@@ -30,7 +36,7 @@ const Header = () => {
                             </form>
                         </div>
                         <div id="cart" className="col-lg-3 col-md-3 col-sm-12">
-                            <Link className="mt-4 mr-2" to="/Cart">giỏ hàng</Link><span className="mt-3">8</span>
+                            <Link className="mt-4 mr-2" to="/Cart">giỏ hàng</Link><span className="mt-3">{totalCart}</span>
                         </div>
                     </div>
                 </div>

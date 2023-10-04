@@ -1,5 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Provider } from "react-redux";
+import store from "./redux-setup/store";
 
 // Import Layout
 import Footer from "./shared/components/Layout/Footer";
@@ -20,7 +22,7 @@ import NotFound from "./pages/NotFound";
 const App = () => {
 
   return (
-    <>
+    <Provider store={store}>
       <BrowserRouter>
         <div>
           <Header />
@@ -35,15 +37,15 @@ const App = () => {
               <div className="row">
                 <div id="main" className="col-lg-8 col-md-12 col-sm-12">
                   <Slider />
-                  
+
                   <Routes>
-                    <Route path="/" element={<Home/>}/>
-                    <Route path="/Category-:id" element={<Category/>}/>
-                    <Route path="/ProductDetails-:id" element={<ProductDetails/>}/>
-                    <Route path="/Search" element={<Search/>}/>
-                    <Route path="/Cart" element={<Cart/>}/>
-                    <Route path="/Success" element={<Success/>}/>
-                    <Route path="*" element={<NotFound/>}/>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/Category-:id" element={<Category />} />
+                    <Route path="/ProductDetails-:id" element={<ProductDetails />} />
+                    <Route path="/Search" element={<Search />} />
+                    <Route path="/Cart" element={<Cart />} />
+                    <Route path="/Success" element={<Success />} />
+                    <Route path="*" element={<NotFound />} />
                   </Routes>
 
                 </div>
@@ -55,7 +57,7 @@ const App = () => {
           <Footer />
         </div>
       </BrowserRouter>
-    </>
+    </Provider>
   )
 }
 

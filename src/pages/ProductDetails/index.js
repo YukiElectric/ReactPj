@@ -1,8 +1,11 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { createCommnetsProduct, getCommentByProduct, getProduct } from "../../services/Api";
 import { getImageProduct } from "../../shared/ultils";
 import { format } from "date-fns";
+import Pagination from "../../shared/components/Pagination";
+import { useDispatch } from "react-redux";
+import { ADD_TO_CART } from "../../shared/constants/action-type";
 
 const ProductDetails = () => {
     const id = useParams().id;
@@ -11,7 +14,15 @@ const ProductDetails = () => {
 
     const [commnet, setComment] = React.useState([]);
 
+    const [pages, setPages] = React.useState({
+        limit : 10,
+    })
+
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const [inputComment, setInputComment] = React.useState([]);
+
+    const page = searchParams.get("page") || 1;
 
     const fomatPrice = (price) => {
         const roundPrice = Math.ceil(price / 1000) * 1000;
@@ -22,21 +33,26 @@ const ProductDetails = () => {
     }
 
     const onChangeInput = (e) => {
-        const {name, value} = e.target;
-        setInputComment({...inputComment,[name]:value});
+        const { name, value } = e.target;
+        setInputComment({ ...inputComment, [name]: value });
     }
 
     const onSubmitComment = (e) => {
         e.preventDefault();
-        createCommnetsProduct(id, inputComment, {}).then(({data}) => {
-            if (data.status=="success") setInputComment("");
+        createCommnetsProduct(id, inputComment, {}).then(({ data }) => {
+            if (data.status == "success") setInputComment("");
             getCommnet(id)
         });
     }
 
     const getCommnet = (id) => {
-        getCommentByProduct(id, {}).then(({ data }) => {
+        getCommentByProduct(id, {
+            params : {
+                page : page
+            }
+        }).then(({ data }) => {
             setComment(data.data.docs);
+            setPages({...pages, ...data.data.pages})
         })
     }
 
@@ -45,7 +61,29 @@ const ProductDetails = () => {
             setProduct(data.data);
         });
         getCommnet(id);
-    }, [id]);
+    }, [id, page]);
+
+    const dispatch = useDispatch();
+
+    const navigate = useNavigate();
+
+    const addToCart = (type) => {
+        if(product) {
+            const {_id, name, image} = product;
+            const price = Math.ceil(product.price/1000)*1000;
+            dispatch ({
+                type : ADD_TO_CART,
+                payload : {
+                    _id,
+                    name,
+                    price,
+                    image,
+                    qty : 1,
+                }
+            });
+        }
+        if(type==="buy-now") return navigate("/Cart");
+    }
 
     return (
         <>
@@ -68,7 +106,16 @@ const ProductDetails = () => {
                                 <li id="price-number"> {fomatPrice(product.price)} </li>
                                 <li id="status">{product.is_stock ? "Còn hàng" : "Hết hàng"}</li>
                             </ul>
-                            <div id="add-cart"><a href="#">Mua ngay</a></div>
+                            <div id="add-cart">
+                                <button onClick={()=>addToCart("buy-now")} className="btn btn-warning mr-2">
+                                    Mua ngay
+                                </button>
+
+                                <button onClick={addToCart} className="btn btn-info">
+                                    Thêm vào giỏ hàng
+                                </button>
+                            </div>
+
                         </div>
                     </div>
                     <div id="product-body" className="row">
@@ -109,7 +156,7 @@ const ProductDetails = () => {
                                     <div className="comment-item">
                                         <ul>
                                             <li><b>{item.name}</b></li>
-                                            <li>{format(new Date(item.updatedAt) , 'yyyy-MM-dd HH:mm:ss')}</li>
+                                            <li>{format(new Date(item.updatedAt), 'yyyy-MM-dd HH:mm:ss')}</li>
                                             <li>
                                                 <p>{item.content}</p>
                                             </li>
@@ -123,13 +170,7 @@ const ProductDetails = () => {
                 </div>
                 {/*	End Product	*/}
                 <div id="pagination">
-                    <ul className="pagination">
-                        <li className="page-item"><a className="page-link" href="#">Trang trước</a></li>
-                        <li className="page-item active"><a className="page-link" href="#">1</a></li>
-                        <li className="page-item"><a className="page-link" href="#">2</a></li>
-                        <li className="page-item"><a className="page-link" href="#">3</a></li>
-                        <li className="page-item"><a className="page-link" href="#">Trang sau</a></li>
-                    </ul>
+                    <Pagination pages={pages}/>
                 </div>
             </div>
 

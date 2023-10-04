@@ -81,10 +81,10 @@ const Cart = () => {
                                 <input placeholder="Họ và tên (bắt buộc)" type="text" name="name" className="form-control" required />
                             </div>
                             <div id="customer-phone" className="col-lg-4 col-md-4 col-sm-12">
-                                <input placeholder="Số điện thoại (bắt buộc)" type="text" name="phone" className="form-control" required />
+                                <input placeholder="Số điện thoại (bắt buộc)" type="tel" name="phone" className="form-control" required />
                             </div>
                             <div id="customer-mail" className="col-lg-4 col-md-4 col-sm-12">
-                                <input placeholder="Email (bắt buộc)" type="text" name="mail" className="form-control" required />
+                                <input placeholder="Email (bắt buộc)" type="email" name="mail" className="form-control" required />
                             </div>
                             <div id="customer-add" className="col-lg-12 col-md-12 col-sm-12">
                                 <input placeholder="Địa chỉ nhà riêng hoặc cơ quan (bắt buộc)" type="text" name="add" className="form-control" required />
