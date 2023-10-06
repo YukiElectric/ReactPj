@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import Pagination from "../../shared/components/Pagination";
 import { useDispatch } from "react-redux";
 import { ADD_TO_CART } from "../../shared/constants/action-type";
+import moment from "moment/moment";
 
 const ProductDetails = () => {
     const id = useParams().id;
@@ -156,7 +157,8 @@ const ProductDetails = () => {
                                     <div className="comment-item">
                                         <ul>
                                             <li><b>{item.name}</b></li>
-                                            <li>{format(new Date(item.updatedAt), 'yyyy-MM-dd HH:mm:ss')}</li>
+                                            {/* <li>{format(new Date(item.updatedAt), 'yyyy-MM-dd HH:mm:ss')}</li> */}
+                                            <li>{moment(new Date(item.updatedAt)).fromNow()}</li>
                                             <li>
                                                 <p>{item.content}</p>
                                             </li>

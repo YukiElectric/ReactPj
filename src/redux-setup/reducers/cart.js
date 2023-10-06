@@ -19,9 +19,27 @@ const addToCart = (state, payload) => {
     return {...state, items : newItems}
 }
 
+const updateCart = (state, payload) => {
+    const items = state.items;
+    const { _id, qty } = payload;
+
+    const newItems = items.map((item) => {
+        if(item._id === _id){
+            item.qty = qty;
+        }
+        return item;
+    })
+
+    return {...state, items: newItems}
+}
+
 export default (state = initState, action) => {
     switch (action.type) {
         case ADD_TO_CART: return addToCart(state, action.payload);
+        case UPDATE_CART: return updateCart(state, action.payload);
+        case DELETE_CART:
+            const newItems = state.items.filter((item) => item._id !== action.payload._id); 
+            return {...state, items: newItems}
         default: return state;
     }
 }

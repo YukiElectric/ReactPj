@@ -13,3 +13,5 @@ export const getProduct = (id, config) => Http.get(`/products/${id}`, config);
 export const getCommentByProduct = (id, config) => Http.get(`/products/${id}/comments`, config);
 
 export const createCommnetsProduct = (id,data, config) => Http.post(`/products/${id}/comments`, data, config);
+
+export const order = (data, config) => Http.post(`/order`, data, config);
